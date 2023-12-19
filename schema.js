@@ -26,8 +26,18 @@ export const typeDefs = `#graphql
     authors: [Author]
     author(id: ID!): Author
   }
+  type Mutation {
+    addGame(game: AddGameInput!): Game
+    deleteGame(id: ID!): [Game]
+  }
+  input AddGameInput {
+    title: String!,
+    platform: [String!]!
+  }
 `;
 
 // available DataTypes are (Int, Float, String, Boolean, ID)
 // (!) is used for non-null
-// type Query is required for all queries of GraphQL which marks the relations
+// type Query is required for all queries of GraphQL which marks the relations and the query variables
+// type Mutation is required for all mutations of GraphQL which marks the relations and the mutation variables
+// we use input to make list of required props, other than writing all of them inside the function params
