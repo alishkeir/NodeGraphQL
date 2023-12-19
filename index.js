@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
+// import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
 
 // data
 import db from './_db.js';
@@ -62,6 +63,17 @@ const resolvers = {
 
       return db.games;
     },
+    updateGame(_, args) {
+      db.games = db.games.map((g) => {
+        if (g.id === args.id) {
+          return { ...g, ...args.edits };
+        }
+
+        return g;
+      });
+
+      return db.games.find((g) => g.id === args.id);
+    },
   },
 };
 
@@ -69,8 +81,8 @@ const resolvers = {
 const server = new ApolloServer({
   // typeDefs -- definitions of types of data
   typeDefs,
-
   resolvers,
+  //   plugins: [ApolloServerPluginLandingPageDisabled()], // disable landing page (Apollo sandbox)
 });
 
 // start server
@@ -80,4 +92,4 @@ const { url } = await startStandaloneServer(server, {
   },
 });
 
-console.log('Server running on PORT 4000');
+console.log(`Server is ready at ${url}`);
